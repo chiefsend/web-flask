@@ -1,0 +1,31 @@
+{% extends "Base.html" %}
+
+{% block page %}
+    <!-- Navbar -->
+    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+        <h5 class="my-0 mr-md-auto font-weight-normal">ChiefSend</h5>
+        <nav class="my-2 my-md-0 mr-md-3">
+            <a class="p-2 text-dark" href="{{ url_for('public') }}">Öffentlich</a>
+            <a class="p-2 text-dark" href="{{ url_for('privacy') }}">Privacy</a>
+            <a class="p-2 text-dark" href="{{ url_for('about') }}">About</a>
+        </nav>
+    </div>
+
+    <main class="container-fluid">
+        <div class="row align-items-center justify-content-center text-center">
+            <div class="col-lg-6">
+                <h1>ChiefSend</h1>
+                <p class="mb-5">Haben Sie schon einen Share link, oder wollen sie einen erstellen?</p>
+                <form class="form-group d-flex" method="post">
+                    {{ form.hidden_tag() }}
+                    {{ form.query(class="form-control", placeholder="Share ID oder Link") }}
+                    {{ form.submit(class="btn btn-primary text-white px-4") }}
+                </form>
+                oder
+                <a class="form-group btn btn-block btn-outline-success" href="{{ url_for('upload') }}">
+                    Share erstellen
+                </a>
+            </div>
+        </div>
+    </main>
+{% endblock page %}

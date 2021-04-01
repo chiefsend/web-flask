@@ -1,0 +1,55 @@
+{% extends 'BasePage.html' %}
+
+{% block preview %}
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://send.chief.zone/public">
+    <meta property="og:title" content="ChiefSend Public">
+    <meta property="og:description" content="Öffentliche Shares">
+{% endblock preview %}
+
+{% block content %}
+    <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+        <h1 class="display-4">Öffentliche Shares</h1>
+        <p class="lead">
+            Hier sehen Sie Shares die öffentlich hochgeladen wurden.
+        </p>
+    </div>
+
+    {% if shares %}
+        {% for row in shares|batch(3) %}
+            <div class="row">
+            {% for item in row %}
+                <div class="col md-4 my-4">
+                    <div class="border rounded p-4 h-100 shadow-sm">
+                        <h3 class="mb-4 font-weight-normal">{{ item.name }}</h3>
+                        <p class="card-text">
+                            {% if item.download_limit %}
+                            <small class="text-muted">
+                                Downloads verbleibend: {{ item.download_limit }},
+                            </small>
+                            <br>
+                            {% endif %}
+                            {% if item.expires %}
+                            <small class="text-muted">
+                                Verfügbar bis: {{ item.expires }}
+                            </small>
+                            {% endif %}
+                        </p>
+                        <a href="{{ url_for('download', share_id=item.id) }}">
+                            <button class="btn btn-lg btn-primary" type="button">
+                                Öffnen
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="row text-center mx-auto">
+            <p>
+                Es wurden noch keine öffentlichen Shares hochgeladen.
+            </p>
+        </div>
+    {% endif %}
+{% endblock content %}

@@ -1,0 +1,203 @@
+{% extends 'BasePage.html' %}
+
+{% block content %}
+    <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+        <h1 class="display-4">Hochladen</h1>
+        <p class="lead">Hier können Sie Dateien bis zu 1000MB hochladen und sofort per Link teilen.</p>
+    </div>
+
+    <div class="card mb-4 text-center shadow" id="app">
+
+        <div class="card-header">
+            <h4 class="my-0 font-weight-normal">
+                <input autocomplete="off" class="form-control" id="name" maxlength="64" name="name"
+                       placeholder="Name vergeben (optional)" size="64" type="text" value="">
+            </h4>
+        </div>
+        <div class="card-body">
+
+            <div class="custom-file mb-3">
+                <input class="custom-file-input" id="files" multiple name="files" required type="file">
+                <label class="custom-file-label truncate" for="files">Dateien hochladen</label>
+            </div>
+
+            <div class="row form-group">
+                <select class="selectpicker col" id="timer" name="timer" required>
+                    <option value="3">3 Minuten</option>
+                    <option value="15">15 Minuten</option>
+                    <option value="30">30 Minuten</option>
+                    <option value="120">2 Stunden</option>
+                    <option value="360">6 Stunden</option>
+                    <option selected value="1440">1 Tag</option>
+                    <option value="10080">7 Tage</option>
+                    <option value="43200">1 Monat</option>
+                    <option value="-1">Für immer</option>
+                </select>
+                <select class="selectpicker col" id="download_limit" name="download_limit" required>
+                    <option value="1">1 Download</option>
+                    <option value="5">5 Downloads</option>
+                    <option selected value="15">15 Downloads</option>
+                    <option value="50">50 Downloads</option>
+                    <option value="200">200 Downloads</option>
+                    <option value="1000">1000 Downloads</option>
+                    <option value="-1">Unbegrenzt</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <input class="btn btn-lg btn-block btn-primary" id="submit" name="submit" type="button"
+                       value="Hochladen" onclick="openShare()">
+            </div>
+
+            <div class="collapse" id="collapseExample">
+                <div class="row form-group">
+                    <p class="custom-control custom-switch col">
+                        <input class="custom-control-input" id="is_public" name="is_public" type="checkbox" value="y">
+                        <label class="custom-control-label" for="is_public">Öffentlich</label>
+                    </p>
+                    <div class="col">
+                        <input autocomplete="off" class="form-control" id="password" name="password"
+                               placeholder="Passwort ..." type="text" value="">
+                    </div>
+                </div>
+
+                <div class="progress form-group d-none">
+                    <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Empfänger-Mail</label>
+                    <input type="email" id="email" class="form-control">
+                </div>
+            </div>
+
+        </div>
+        <a class="card-footer" data-toggle="collapse" href="#collapseExample" role="button"
+           aria-expanded="false" aria-controls="collapseExample">
+            weitere Einstellungen
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                 class="bi bi-chevron-expand" viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                      d="M3.646 9.146a.5.5 0 0 1 .708 0L8 12.793l3.646-3.647a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 0-.708zm0-2.292a.5.5 0 0 0 .708 0L8 3.207l3.646 3.647a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 0 0 0 .708z"></path>
+            </svg>
+        </a>
+    </div>
+
+    <style>
+        .truncate {
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+    <script src="{{ url_for('static', filename='js/jq-ajax-progress.min.js') }}"></script>
+    <script>
+        // To show filenames in the file selector.
+        $(".custom-file-input").on("change", function () {
+            let fns = $(this)[0].files;
+            let label = "";
+            for (let i = 0; i < fns.length; i++) {
+                label = label.concat(fns[i].name);
+                if (i < fns.length - 1) label = label.concat(", ");
+            }
+            $(this).siblings(".custom-file-label").addClass("selected").html(label);
+        });
+    </script>
+    <script>
+        let share = {};
+
+        function openShare() {
+            console.log("openShare");
+
+            $.ajax({
+                "url": "http://localhost:6969/shares",
+                "method": "POST",
+                "timeout": 0,
+                "headers": {
+                    "Content-Type": "application/json"
+                },
+                "data": JSON.stringify({ // TODO
+                    "name": $("#name").val(),
+                    "expires": null,
+                    "download_limit": parseInt($("#download_limit").val()),
+                    "is_public": $('#is_public').is(':checked'),
+                    "password": $("#password").val(),
+                    "emails": [$("#email").val()],
+                }),
+            }).done((response) => {
+                share = response;
+                console.log(share);
+                disableAll();
+                uploadFiles();
+            });
+        }
+
+        function uploadFiles() {
+            console.log("uploadFiles");
+            let files = $(".custom-file-input")[0].files;
+            for (let i = 0; i < files.length; i++) {
+                let file = files.item(i);
+                var formData = new FormData();
+                formData.set('file', file);
+
+                $.ajax({
+                    url: `http://localhost:6969/share/${share.id}/attachments`,
+                    type: 'post',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        console.log(response);
+                    },
+                    uploadProgress: function (e) {
+                        if (e.lengthComputable) {
+                            let completedPercentage = Math.round((e.loaded * 100) / e.total);
+                            let percentVal = completedPercentage + '%';
+                            $('.progress-bar').html(percentVal).width(percentVal);
+                            console.log(completedPercentage);
+                        }
+                    }
+                });
+            }
+            closeShare();
+        }
+
+        function closeShare() {
+            $(document).ajaxStop(function () {
+                console.log("closeShare");
+                $.ajax({
+                    url: `http://localhost:6969/share/${share.id}`,
+                    method: "POST",
+                    timeout: 0,
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    error: function() {
+                        uploadComplete();
+                    }
+                }).done((response) => {
+                    share = response;
+                    console.log(share);
+                    window.location.href = "/shared/" + share.id;
+                });
+            })
+        }
+
+        function uploadComplete() {
+            console.log("error complete");
+        }
+    </script>
+    <script>
+        function disableAll() {
+            $('.progress').removeClass('d-none');
+            document.getElementById('name').disabled = true;
+            document.getElementById('files').disabled = true;
+            document.getElementById('download_limit').disabled = true;
+            document.getElementById('timer').disabled = true;
+            document.getElementById('is_public').disabled = true;
+            document.getElementById('password').disabled = true;
+            document.getElementById('submit').disabled = true;
+        }
+    </script>
+{% endblock content %}
