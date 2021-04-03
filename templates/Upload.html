@@ -111,7 +111,7 @@
             console.log("openShare");
 
             $.ajax({
-                "url": "http://localhost:6969/shares",
+                "url": "{{ API_URL }}/shares",
                 "method": "POST",
                 "timeout": 0,
                 "headers": {
@@ -142,7 +142,7 @@
                 formData.set('file', file);
 
                 $.ajax({
-                    url: `http://localhost:6969/share/${share.id}/attachments`,
+                    url: `{{ API_URL }}/share/${share.id}/attachments`,
                     type: 'post',
                     data: formData,
                     contentType: false,
@@ -167,7 +167,7 @@
             $(document).ajaxStop(function () {
                 console.log("closeShare");
                 $.ajax({
-                    url: `http://localhost:6969/share/${share.id}`,
+                    url: `{{ API_URL }}/share/${share.id}`,
                     method: "POST",
                     timeout: 0,
                     headers: {

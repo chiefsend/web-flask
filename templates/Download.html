@@ -41,7 +41,7 @@
                             <script>
                                 $("button:parent").click(function (e) {
                                     e.preventDefault();
-                                    window.location.href = `http://localhost:6969/share/{{ up.id }}/attachment/{{ file.id }}`;
+                                    window.location.href = `{{ API_URL }}/share/{{ up.id }}/attachment/{{ file.id }}`;
                                 });
                             </script>
                         </button>
@@ -57,7 +57,7 @@
             <script>
                 $("#download-zip").click(function (e) {
                     e.preventDefault();
-                    window.location.href = `http://localhost:6969/share/{{ up.id }}/zip`;
+                    window.location.href = `{{ API_URL }}/share/{{ up.id }}/zip`;
                 });
             </script>
 
