@@ -1,31 +1,104 @@
-{% extends "Base.html" %}
+<!DOCTYPE html>
+<html>
 
-{% block page %}
-    <!-- Navbar -->
-    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
-        <h5 class="my-0 mr-md-auto font-weight-normal">ChiefSend</h5>
-        <nav class="my-2 my-md-0 mr-md-3">
-            <a class="p-2 text-dark" href="{{ url_for('public') }}">Öffentlich</a>
-            <a class="p-2 text-dark" href="{{ url_for('privacy') }}">Privacy</a>
-            <a class="p-2 text-dark" href="{{ url_for('about') }}">About</a>
-        </nav>
-    </div>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Home - ChiefSend</title>
+    <meta name="description" content="Fast, Simple and anonymous file-sharing.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/fonts/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/fonts/simple-line-icons.min.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+</head>
 
-    <main class="container-fluid">
-        <div class="row align-items-center justify-content-center text-center">
-            <div class="col-lg-6">
-                <h1>ChiefSend</h1>
-                <p class="mb-5">Haben Sie schon einen Share link, oder wollen sie einen erstellen?</p>
-                <form class="form-group d-flex" method="post">
-                    {{ form.hidden_tag() }}
-                    {{ form.query(class="form-control", placeholder="Share ID oder Link") }}
-                    {{ form.submit(class="btn btn-primary text-white px-4") }}
-                </form>
-                oder
-                <a class="form-group btn btn-block btn-outline-success" href="{{ url_for('upload') }}">
-                    Share erstellen
-                </a>
+<body>
+    <nav class="navbar navbar-light navbar-expand bg-light navigation-clean">
+        <div class="container"><a class="navbar-brand" href="#">ChiefSend</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"></button>
+            <div class="collapse navbar-collapse" id="navcol-1"><a class="btn btn-primary ml-auto" role="button" href="#">Hochladen</a></div>
+        </div>
+    </nav>
+    <header class="text-center text-white masthead" style="background:url('{{ url_for('static', filename='assets/img/bg-masthead.jpg') }}') no-repeat center center;background-size:cover;">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-9 mx-auto">
+                    <h1 class="text-center mb-5">Dateien hochladen und sofort teilen<br>Einfach. Schnell. Anonym.</h1>
+                </div>
+                <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
+                    <form method="post">
+                        {{ form.hidden_tag() }}
+                        <div class="form-row">
+                            <div class="col-12 col-md-9 mb-2 mb-md-0">
+                                {{ form.query(class='form-control form-control-lg', placeholder='Share ID eingeben') }}
+                            </div>
+                            <div class="col-12 col-md-3">
+                                {{ form.submit(class='btn btn-primary btn-block btn-lg') }}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-10 col-lg-8 col-xl-7 mx-auto" style="height: 32px;">
+                    <p class="lead text-center shadow-sm d-inline-flex d-xl-flex flex-column justify-content-xl-center align-items-xl-center" style="text-align: center;">oder</p>
+                </div>
+                <div class="col-md-10 col-lg-8 col-xl-7 mx-auto"><a class="btn btn-success btn-block btn-lg" role="button" href="/upload">Dateien hochladen</a></div>
             </div>
         </div>
-    </main>
-{% endblock page %}
+    </header>
+    <section class="text-center bg-light features-icons">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="mx-auto features-icons-item mb-5 mb-lg-0 mb-lg-3">
+                        <div class="d-flex features-icons-icon"><i class="icon-energy m-auto text-primary" data-bss-hover-animate="pulse"></i></div>
+                        <h3>Schnell</h3>
+                        <p class="lead mb-0">Sie brauchen keinen Account. Einfach loslegen!</p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="mx-auto features-icons-item mb-5 mb-lg-0 mb-lg-3">
+                        <div class="d-flex features-icons-icon"><i class="icon-user m-auto text-primary" data-bss-hover-animate="pulse"></i></div>
+                        <h3>Anonym</h3>
+                        <p class="lead mb-0">ChiefSend sammelt keine Nutzerdaten.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="mx-auto features-icons-item mb-5 mb-lg-0 mb-lg-3">
+                        <div class="d-flex features-icons-icon"><i class="icon-check m-auto text-primary" data-bss-hover-animate="pulse"></i></div>
+                        <h3>Einfach</h3>
+                        <p class="lead mb-0">Einfach die Dateien hochladen und sofort per Link oder Email teilen.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="bg-light footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 text-center text-lg-left my-auto h-100">
+                    <ul class="list-inline mb-2">
+                        <li class="list-inline-item"><a href="#">About</a></li>
+                        <li class="list-inline-item"><span>⋅</span></li>
+                        <li class="list-inline-item"><a href="#">Terms of &nbsp;Use</a></li>
+                        <li class="list-inline-item"><span>⋅</span></li>
+                        <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
+                    </ul>
+                    <p class="text-muted small mb-4 mb-lg-0">© ChiefSend 2021. All Rights Reserved.</p>
+                </div>
+                <div class="col-lg-6 text-center text-lg-right my-auto h-100">
+                    <ul class="list-inline mb-0">
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-github fa-2x fa-fw" data-toggle="tooltip" data-bss-tooltip="" title="Quellcode"></i></a></li>
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-twitter fa-2x fa-fw" data-toggle="tooltip" data-bss-tooltip="" title="Informationen über Updates"></i></a></li>
+                        <li class="list-inline-item"><a href="#"></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="{{ url_for('static', filename='assets/js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/js/bs-init.js') }}"></script>
+</body>
+
+</html>

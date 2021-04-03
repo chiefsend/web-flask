@@ -11,7 +11,7 @@ class AuthForm(FlaskForm):
 
 class SearchForm(FlaskForm):
     query = StringField('Suchbegriff', validators=[InputRequired()])
-    submit = SubmitField('Finden')
+    submit = SubmitField('Download')
 
 
 def get_password(share_id):
